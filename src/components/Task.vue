@@ -51,6 +51,7 @@
                     </b-button>
                 </div>
             </template>
+            <hr>
             <div class="container is-fullwidth">
                 <b-field label="標籤">
                     <b-select placeholder="種類" expanded v-model="taskLabel">
@@ -80,9 +81,12 @@
                         </option>
                     </b-select>
                 </b-field>
+                <hr>
                 <b-field>
-                    <b-button type="is-primary" outlined @click="confirmEdit">確認</b-button>
-                    <b-button type="is-danger" outlined @click="deleteTask">刪除</b-button>
+                    <div class="buttons" style="justify-content: space-around;">
+                        <b-button type="is-primary" outlined @click="confirmEdit">確認</b-button>
+                        <b-button type="is-danger" outlined @click="deleteTask">刪除</b-button>
+                    </div>
                 </b-field>
             </div>
         </b-collapse>
