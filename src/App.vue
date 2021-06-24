@@ -92,9 +92,22 @@
                             </b-field>
                         </div>
                         <div class="level-item">
-                            <b-field>
-                                <b-button @click="saveWork">存檔</b-button>
-                            </b-field>
+                            <b-collapse :open.sync="isAddSaveTime" aria-id="forNewSave">
+                                <template #trigger>
+                                    <b-button
+                                        outlined
+                                        label="存檔"
+                                        type="is-primary"
+                                        aria-controls="forNewSave"
+                                    />
+                                </template>
+                                <div class="notification">
+                                    <section class="section">
+                                      <b-datetimepicker v-model="datetime" inline></b-datetimepicker>  
+                                      <b-field><b-button outlined @click="saveWork">確認</b-button></b-field>
+                                    </section>
+                                </div>
+                            </b-collapse>
                         </div>
                     </div>
                 </nav>
@@ -159,8 +172,10 @@ export default {
     },
     data: function() {
         return {
+            datetime: undefined,
             isAddLabel: false,
             isAddTask: false,
+            isAddSaveTime: false,
             
             firstDay: 1,
             numberOfDays: undefined,
@@ -234,7 +249,7 @@ export default {
             this.isAddLabel = false;
         },
         saveWork() {
-            this.$cookies.config(new Date(2026, 12, 28).toUTCString());
+            this.$cookies.config(this.datetime.toUTCString());
             this.allTasks = this.$refs.task.map((taskComponent)=>{
                 return taskComponent.tasks;
             });
@@ -242,6 +257,7 @@ export default {
             this.$cookies.remove('labels');
             this.$cookies.set('tasks', JSON.stringify(this.allTasks));
             this.$cookies.set('labels', JSON.stringify(this.labels));
+            this.isAddSaveTime = false;
         }
     }
 };
