@@ -26,7 +26,7 @@
                             <template v-slot:content>
                                 <p>{{item.explanation}}</p>
                             </template>
-                            <b-button expanded @click="changeIcon(item)" style="width:8.8em">
+                            <b-button expanded @click="changeIcon(item)" style="width:10em">
                                 <span :style="{color: item.label.color}">{{item.label.icon}}</span>
                                 {{item.title}}
                             </b-button>
@@ -205,8 +205,7 @@ export default {
 <style>
 
 .tooltip-content {
-    z-index: 100000 !important;
-    position: absolute !important; 
+    font-size: 1.2rem !important;
 }
 </style>
 
