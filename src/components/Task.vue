@@ -1,13 +1,15 @@
 <template>
     <div>
-        <div style="height:20em;overflow:auto;">
+        <div style="height:20em">
             <draggable
                 v-model="tasks"
                 v-bind="dragOptions"
                 @start="drag = true"
                 @end="drag = false"
+                tag="div"
             >
                 <transition-group 
+                    tag="div"
                     class="columns is-multiline"
                     type="transition" :name="!drag ? 'flip-list' : null"
                 >
@@ -17,13 +19,14 @@
                             position="is-right"
                             size="is-medium"
                             multilined
+                            expanded
                             type="is-primary"
                             :triggers="['hover']"
                         >
                             <template v-slot:content>
                                 <p>{{item.explanation}}</p>
                             </template>
-                            <b-button expanded @click="changeIcon(item)" style="width:7.8em">
+                            <b-button expanded @click="changeIcon(item)" style="width:8.8em">
                                 <span :style="{color: item.label.color}">{{item.label.icon}}</span>
                                 {{item.title}}
                             </b-button>
@@ -184,9 +187,7 @@ export default {
 .modal-card-body {
   overflow: auto;
 }
-.tooltip-own > * {
-    z-index: 1000; 
-}
+
 
 .flip-list-move {
   transition: transform 0.5s;
@@ -199,6 +200,14 @@ export default {
   background: #c8ebfb;
 }
 
+</style>
+
+<style>
+
+.tooltip-content {
+    z-index: 100000 !important;
+    position: absolute !important; 
+}
 </style>
 
 // #CD9DBE

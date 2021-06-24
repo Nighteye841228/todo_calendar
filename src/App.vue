@@ -109,6 +109,9 @@
                                 </div>
                             </b-collapse>
                         </div>
+                        <div class="level-item">
+                            <b-button type="is-danger" outlined @click="deleteCookie">刪除記錄</b-button>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -122,14 +125,14 @@
                 </div>
                 <div class="columns is-multiline has-text-centered is-variable is-2">
                     <div class="column is-1" v-for="(i,ind) in firstDay-1" :key="ind+'day'" style="width:14.286%">
-                        <div class="box" style="height:26.2rem;overflow:auto;">
+                        <div class="box" style="height:27.85rem;overflow:auto;">
                             <div class="has-text-centered content">
                                 <p class="title"></p>
                             </div>
                         </div>
                     </div>
                     <div class="column is-1" v-for="(i,index) in numberOfDays" :key="index" style="width:14.286%">
-                        <div class="box">
+                        <div class="box" style="padding: 1.5rem 0.5rem;">
                             <div class="has-text-centered content" @dblclick="setRed(index)">
                                 <p class="title" ref="dateTitle">{{ index+1 }}</p>
                             </div>
@@ -162,7 +165,10 @@ export default {
         'child-task': Task
     },
     created() {
-        const date = new Date();      
+        const date = new Date();
+        date.setMonth(date.getMonth());
+        date.setDate(1);
+        this.firstDay = date.getDay();      
         date.setMonth(date.getMonth()+1);
         date.setDate(0);
         this.numberOfDays = date.getDate();
@@ -258,6 +264,10 @@ export default {
             this.$cookies.set('tasks', JSON.stringify(this.allTasks));
             this.$cookies.set('labels', JSON.stringify(this.labels));
             this.isAddSaveTime = false;
+        },
+        deleteCookie () {
+            this.$cookies.remove('tasks');
+            this.$cookies.remove('labels');
         }
     }
 };
@@ -271,10 +281,10 @@ export default {
 .modal-card-body {
   overflow: auto;
 }
-.tooltip-own > * {
-    z-index: 1000; 
-}
+
 </style>
+
+
 
 // #CD9DBE
 // #89D2AF
