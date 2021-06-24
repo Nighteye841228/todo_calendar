@@ -16,17 +16,17 @@
                     <div class="column is-12" v-for="(item) in tasks" :key="item.unique">
                         <b-tooltip 
                             class="tooltip-own"
-                            position="is-right"
+                            position="is-top"
                             size="is-medium"
                             multilined
-                            expanded
+                            style="width:100%;overflow-wrap: break-word;"
                             type="is-primary"
                             :triggers="['hover']"
                         >
                             <template v-slot:content>
                                 <p>{{item.explanation}}</p>
                             </template>
-                            <b-button expanded @click="changeIcon(item)" style="width:10em">
+                            <b-button expanded @click="changeIcon(item)">
                                 <span :style="{color: item.label.color}">{{item.label.icon}}</span>
                                 {{item.title}}
                             </b-button>
