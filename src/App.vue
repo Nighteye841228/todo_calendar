@@ -124,14 +124,14 @@
                     </div>
                 </div>
                 <div class="columns is-multiline has-text-centered is-variable is-2">
-                    <div class="column is-1" v-for="(i,ind) in firstDay-1" :key="ind+'day'" style="width:14.286%">
+                    <div class="column is-1 seven-col" v-for="(i,ind) in firstDay-1" :key="ind+'day'">
                         <div class="box" style="height:27.85rem;overflow:auto;">
                             <div class="has-text-centered content">
                                 <p class="title"></p>
                             </div>
                         </div>
                     </div>
-                    <div class="column is-1" v-for="(i,index) in numberOfDays" :key="index" style="width:14.286%">
+                    <div class="column is-1 seven-col" v-for="(i,index) in numberOfDays" :key="index">
                         <div class="box" style="padding: 1.5rem 0.5rem;">
                             <div class="has-text-centered content" @dblclick="setRed(index)">
                                 <p class="title" ref="dateTitle">{{ index+1 }}</p>
@@ -149,6 +149,7 @@
                 </div>
             </div>
         </section>
+        
 
     </div>
 </template>
@@ -276,10 +277,12 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
 
-.modal-card-body {
-  overflow: auto;
+@media screen and (min-width: 770px),print {
+    .seven-col {
+        width: 14.28571428% !important;
+    }
 }
 
 </style>
