@@ -33,34 +33,6 @@
                             </b-collapse>
                         </div>
                         <div class="level-item">
-                            <b-collapse :open.sync="isDeleteLabel" aria-id="forNewTask">
-                                <template #trigger>
-                                    <b-button
-                                        outlined
-                                        label="刪除標籤"
-                                        type="is-danger"
-                                        aria-controls="forNewTask"
-                                    />
-                                </template>
-                                <div class="notification">
-                                    <section class="section">
-                                        <b-field label="標籤">
-                                            <b-select placeholder="選擇種類" expanded v-model="taskLabel">
-                                                <option
-                                                    v-for="(label) in labels"
-                                                    :value="label"
-                                                    :key="label.name"
-                                                >
-                                                    {{ label.name }}
-                                                </option>
-                                            </b-select>
-                                        </b-field>
-                                        <b-field><b-button outlined @click="deleteLabel">確認</b-button></b-field>
-                                    </section>
-                                </div>
-                            </b-collapse>
-                        </div>
-                        <div class="level-item">
                             <b-collapse :open.sync="isAddTask" aria-id="forNewTask">
                                 <template #trigger>
                                     <b-button
@@ -105,6 +77,24 @@
                                 </div>
                             </b-collapse>
                         </div>
+                        <div class="level-item">
+                            <b-collapse :open.sync="isAddSaveTime" aria-id="forNewSave">
+                                <template #trigger>
+                                    <b-button
+                                        outlined
+                                        label="存檔"
+                                        type="is-primary"
+                                        aria-controls="forNewSave"
+                                    />
+                                </template>
+                                <div class="notification">
+                                    <section class="section">
+                                      <b-datetimepicker v-model="datetime" inline></b-datetimepicker>  
+                                      <b-field><b-button outlined @click="saveWork">確認</b-button></b-field>
+                                    </section>
+                                </div>
+                            </b-collapse>
+                        </div>
                     </div>
                     <div class="level-right">
                         <div class="heading">本月開頭星期</div>
@@ -120,19 +110,29 @@
                             </b-field>
                         </div>
                         <div class="level-item">
-                            <b-collapse :open.sync="isAddSaveTime" aria-id="forNewSave">
+                            <b-collapse :open.sync="isDeleteLabel" aria-id="forNewTask">
                                 <template #trigger>
                                     <b-button
                                         outlined
-                                        label="存檔"
-                                        type="is-primary"
-                                        aria-controls="forNewSave"
+                                        label="刪除標籤"
+                                        type="is-danger"
+                                        aria-controls="forNewTask"
                                     />
                                 </template>
                                 <div class="notification">
                                     <section class="section">
-                                      <b-datetimepicker v-model="datetime" inline></b-datetimepicker>  
-                                      <b-field><b-button outlined @click="saveWork">確認</b-button></b-field>
+                                        <b-field label="標籤">
+                                            <b-select placeholder="選擇種類" expanded v-model="taskLabel">
+                                                <option
+                                                    v-for="(label) in labels"
+                                                    :value="label"
+                                                    :key="label.name"
+                                                >
+                                                    {{ label.name }}
+                                                </option>
+                                            </b-select>
+                                        </b-field>
+                                        <b-field><b-button outlined @click="deleteLabel">確認</b-button></b-field>
                                     </section>
                                 </div>
                             </b-collapse>
