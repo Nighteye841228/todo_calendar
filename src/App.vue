@@ -73,7 +73,7 @@
                                 <div class="notification">
                                     <section class="section">
                                         <b-field label="標籤">
-                                            <b-select placeholder="選擇種類" expanded v-model="taskLabel">
+                                            <b-select placeholder="選擇種類" expanded required v-model="taskLabel">
                                                 <option
                                                     v-for="(label) in labels"
                                                     :value="label"
@@ -269,8 +269,8 @@ export default {
         addTask() {
             const task = {
                 label: this.taskLabel,
-                title: this.taskTitle,
-                explanation: this.taskExplanation,
+                title: this.taskTitle || "",
+                explanation: this.taskExplanation || "",
                 date: this.taskDay
             };
             this.handleTransTask(task);
@@ -278,9 +278,9 @@ export default {
         },
         addLabel() {
             this.labels.push({
-                name: this.labelName,
-                icon: this.labelIcon,
-                color: this.labelColor,
+                name: this.labelName || "",
+                icon: this.labelIcon || "。",
+                color: this.labelColor || "#000000",
             });
             this.isAddLabel = false;
         },

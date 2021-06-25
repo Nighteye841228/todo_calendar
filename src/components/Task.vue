@@ -22,6 +22,7 @@
                             style="width:100%;overflow-wrap: break-word;"
                             type="is-primary"
                             :triggers="['hover']"
+                            v-if="item.explanation.length"
                         >
                             <template v-slot:content>
                                 <p>{{item.explanation}}</p>
@@ -31,6 +32,10 @@
                                 {{item.title}}
                             </b-button>
                         </b-tooltip>
+                        <b-button expanded @click="changeIcon(item)" v-if="!item.explanation.length">
+                                <span :style="{color: item.label.color}">{{item.label.icon}}</span>
+                                {{item.title}}
+                        </b-button>
                     </div>
                 </transition-group>
 
@@ -140,11 +145,11 @@ export default {
             this.setTask(item);
         },
         setTask(item) {
-            this.taskTitle = item.title,
-            this.taskExplanation = item.explanation;
+            this.taskTitle = item.title || "",
+            this.taskExplanation = item.explanation || "";
             this.taskDay = this.date;
             this.taskLabel = item.label;
-            this.taskUnique = item.unique;
+            this.taskUnique = item.unique || "";
         },
         confirmEdit() {
             let oldItem = this.tasks.find(({unique})=>{return unique === this.taskUnique;});
@@ -152,23 +157,23 @@ export default {
                 this.tasks = this.tasks.filter(({unique})=>{return unique !== this.taskUnique;});
                 this.$emit('handleTransTask', {
                     date: this.taskDay,
-                    title: this.taskTitle,
-                    explanation: this.taskExplanation,
+                    title: this.taskTitle || "",
+                    explanation: this.taskExplanation || "",
                     label: this.taskLabel,
                     unique: this.taskUnique
                 });
                 this.isEditTask = false;
                 return;
             }
-            oldItem.title = this.taskTitle;
-            oldItem.explanation = this.taskExplanation;
+            oldItem.title = this.taskTitle || "";
+            oldItem.explanation = this.taskExplanation || "";
             oldItem.label = this.taskLabel;
             this.isEditTask = false;
         },
         confirmAdd() {
             let temp = {
-                title: this.taskTitle,
-                explanation: this.taskExplanation,
+                title: this.taskTitle || "",
+                explanation: this.taskExplanation || "",
                 label: this.taskLabel,
                 unique: this.taskUnique || this.taskTitle + getRandomInt(10000)
             };
