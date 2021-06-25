@@ -33,6 +33,34 @@
                             </b-collapse>
                         </div>
                         <div class="level-item">
+                            <b-collapse :open.sync="isDeleteLabel" aria-id="forNewTask">
+                                <template #trigger>
+                                    <b-button
+                                        outlined
+                                        label="刪除標籤"
+                                        type="is-danger"
+                                        aria-controls="forNewTask"
+                                    />
+                                </template>
+                                <div class="notification">
+                                    <section class="section">
+                                        <b-field label="標籤">
+                                            <b-select placeholder="選擇種類" expanded v-model="taskLabel">
+                                                <option
+                                                    v-for="(label) in labels"
+                                                    :value="label"
+                                                    :key="label.name"
+                                                >
+                                                    {{ label.name }}
+                                                </option>
+                                            </b-select>
+                                        </b-field>
+                                        <b-field><b-button outlined @click="deleteLabel">確認</b-button></b-field>
+                                    </section>
+                                </div>
+                            </b-collapse>
+                        </div>
+                        <div class="level-item">
                             <b-collapse :open.sync="isAddTask" aria-id="forNewTask">
                                 <template #trigger>
                                     <b-button
@@ -183,6 +211,7 @@ export default {
             isAddLabel: false,
             isAddTask: false,
             isAddSaveTime: false,
+            isDeleteLabel: false,
             
             firstDay: 1,
             numberOfDays: undefined,
@@ -254,6 +283,10 @@ export default {
                 color: this.labelColor,
             });
             this.isAddLabel = false;
+        },
+        deleteLabel() {
+            this.labels = this.labels.filter(({name})=>{ return name !== this.taskLabel.name;});
+            this.isDeleteLabel = false;
         },
         saveWork() {
             this.$cookies.config(this.datetime.toUTCString());
