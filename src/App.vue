@@ -318,6 +318,9 @@ export default {
             window.localStorage.removeItem('labels');
         },
         downloadJson() {
+            this.allTasks = this.$refs.task.map((taskComponent)=>{
+                return taskComponent.tasks;
+            });
             const downJson = JSON.stringify({
                 tasks: JSON.stringify(this.allTasks),
                 labels: JSON.stringify(this.labels)
