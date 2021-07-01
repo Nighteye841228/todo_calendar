@@ -157,14 +157,14 @@
             </div>
             <div class="box">
                 <div class="columns">
-                    <div class="column has-text-centered" v-for="(j,index) in date" :key="index">
+                    <div class="column has-text-centered blank" v-for="(j,index) in date" :key="index">
                         <p class="heading">
                             {{ j }}
                         </p>
                     </div>
                 </div>
                 <div class="columns is-multiline has-text-centered is-variable is-2">
-                    <div class="column is-1 seven-col" v-for="(i,ind) in firstDay-1" :key="ind+'day'">
+                    <div class="column is-1 seven-col blank" v-for="(i,ind) in firstDay-1" :key="ind+'day'">
                         <div class="box" style="height:27.85rem;overflow:auto;">
                             <div class="has-text-centered content">
                                 <p class="title"></p>
@@ -369,6 +369,13 @@ const fileLoad = file => {
 @media screen and (min-width: 770px),print {
     .seven-col {
         width: 14.28571428% !important;
+    }
+}
+
+
+@media (max-width: 760px) {
+    .blank {
+        display: none !important;
     }
 }
 
