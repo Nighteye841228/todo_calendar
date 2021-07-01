@@ -78,33 +78,45 @@
                             </b-collapse>
                         </div>
                         <div class="level-item">
-                            <b-collapse :open.sync="isAddSaveTime" aria-id="forNewSave">
-                                <template #trigger>
-                                    <b-button
-                                        outlined
-                                        label="存檔"
-                                        type="is-primary"
-                                        aria-controls="forNewSave"
-                                    />
-                                </template>
-                                <div class="notification">
-                                    <section class="section">
-                                      <b-datetimepicker v-model="datetime" inline></b-datetimepicker>  
-                                      <b-field><b-button outlined @click="saveWork">確認</b-button></b-field>
-                                    </section>
-                                </div>
-                            </b-collapse>
+                            <b-button type="is-text" disabled> </b-button>
+                        </div>
+                        <div class="level-item">
+                            <b-button
+                                outlined
+                                label="存檔"
+                                type="is-primary"
+                                @click="saveWork"
+                            />
+                        </div>
+                        <div class="level-item">
+                            <b-button
+                                outlined
+                                label="下載"
+                                type="is-primary"
+                                @click="downloadJson"
+                            />
+                        </div>
+                        <div class="level-item">
+                            <b-field class="file is-primary" :class="{'has-name': !!file}">
+                                <b-upload v-model="file" class="file-label" @input="uploadJson">
+                                    <span class="file-cta">
+                                        <b-icon class="file-icon" icon="upload"></b-icon>
+                                        <span class="file-label">上傳記錄</span>
+                                    </span>
+                                    <span class="file-name" v-if="file">
+                                        {{ file.name }}
+                                    </span>
+                                </b-upload>
+                            </b-field>
                         </div>
                     </div>
                     <div class="level-right">
-                        <div class="heading">本月開頭星期</div>
-                        <div class="level-item">
+                        <div class="level-item" v-if="false">
                             <b-field>
                                 <b-numberinput placeholder="本月開頭星期幾？" v-model.number="firstDay"></b-numberinput>
                             </b-field>
                         </div>
-                        <div class="heading">本月日數</div>
-                        <div class="level-item">
+                        <div class="level-item" v-if="false">
                             <b-field>
                                 <b-numberinput placeholder="本月有幾天？" v-model.number="numberOfDays"></b-numberinput>
                             </b-field>
@@ -171,30 +183,35 @@
                                 :inheritTask="allTasks[index]"
                                 @handleTransTask="handleTransTask" 
                                 ref="task"
+                                :key="componentKey"
                             />
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
 
+        <Reader v-if="false" />      
     </div>
 </template>
 
 <script>
 import InputColorPicker from 'vue-native-color-picker';
 import Task from './components/Task';
+import Reader from './components/Reader';
+
 
 
 export default {
     name: 'App',
     components: {
         'v-input-colorpicker': InputColorPicker,
-        'child-task': Task
+        'child-task': Task,
+        Reader
     },
     created() {
         const date = new Date();
+        let myStore = window.localStorage;
         date.setMonth(date.getMonth());
         date.setDate(1);
         this.firstDay = date.getDay();      
@@ -202,8 +219,8 @@ export default {
         date.setDate(0);
         this.numberOfDays = date.getDate();
 
-        if(this.$cookies.isKey('tasks')) this.allTasks = JSON.parse(this.$cookies.get('tasks'));
-        if(this.$cookies.isKey('labels')) this.labels = JSON.parse(this.$cookies.get('labels'));
+        if(myStore.getItem('tasks')) this.allTasks = JSON.parse(myStore.getItem('tasks'));
+        if(myStore.getItem('labels')) this.labels = JSON.parse(myStore.getItem('labels'));
     },
     data: function() {
         return {
@@ -212,6 +229,8 @@ export default {
             isAddTask: false,
             isAddSaveTime: false,
             isDeleteLabel: false,
+            file: null,
+            componentKey: 0,
             
             firstDay: 1,
             numberOfDays: undefined,
@@ -222,11 +241,7 @@ export default {
             labelName: '',
             labelIcon: '',
             labelColor: '',
-            allTasks: [
-                [
-                    
-                ]
-            ],
+            allTasks: [],
 
             labels: [
                 {
@@ -289,22 +304,58 @@ export default {
             this.isDeleteLabel = false;
         },
         saveWork() {
-            this.$cookies.config(this.datetime.toUTCString());
             this.allTasks = this.$refs.task.map((taskComponent)=>{
                 return taskComponent.tasks;
             });
-            this.$cookies.remove('tasks');
-            this.$cookies.remove('labels');
-            this.$cookies.set('tasks', JSON.stringify(this.allTasks));
-            this.$cookies.set('labels', JSON.stringify(this.labels));
+            window.localStorage.removeItem('tasks');
+            window.localStorage.removeItem('labels');
+            window.localStorage.setItem('tasks', JSON.stringify(this.allTasks));
+            window.localStorage.setItem('labels', JSON.stringify(this.labels));
             this.isAddSaveTime = false;
         },
         deleteCookie () {
-            this.$cookies.remove('tasks');
-            this.$cookies.remove('labels');
+            window.localStorage.removeItem('tasks');
+            window.localStorage.removeItem('labels');
+        },
+        downloadJson() {
+            const downJson = JSON.stringify({
+                tasks: JSON.stringify(this.allTasks),
+                labels: JSON.stringify(this.labels)
+            });
+            let link = document.createElement('a');
+            link.download = `存檔`;
+            link.style.display = 'none';
+            // 字元內容轉變成blob地址
+            let blob = new Blob([downJson], {
+                type: 'application/json'
+            });
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        },
+        uploadJson: async function () {
+            try {
+                let data = await fileLoad(this.file);
+                data = JSON.parse(data); 
+                this.allTasks = JSON.parse(data.tasks);
+                this.labels = JSON.parse(data.labels);
+                this.componentKey += 1;
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 };
+
+const fileLoad = file => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsText(file)
+  })
+}
 
 
 </script>
