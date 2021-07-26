@@ -330,7 +330,7 @@ export default {
             link.style.display = 'none';
             // 字元內容轉變成blob地址
             let blob = new Blob([downJson], {
-                type: 'application/json'
+                type: 'application/json;charset=utf-8'
             });
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
