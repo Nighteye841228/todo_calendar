@@ -334,15 +334,15 @@ export default {
                 tasks: JSON.stringify(this.allTasks),
                 labels: JSON.stringify(this.labels)
             });
-            this.download(downJson, 'application/json');
+            this.download(downJson);
         },
-        download (item, format) {
+        download (item) {
             let link = document.createElement('a');
             link.download = `存檔`;
             link.style.display = 'none';
             // 字元內容轉變成blob地址
             let blob = new Blob([item], {
-                type: `${format};charset=utf-8`
+                type: 'application/json;charset=utf-8'
             });
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
@@ -377,7 +377,7 @@ export default {
             wordItems = wordItems.map((item) => {
                 return `${item.name}: ${item.count} hours`;
             }).join(',\n');
-            this.download(wordItems, 'application/json');
+            this.compressJson(wordItems);
         }
     }
 };
