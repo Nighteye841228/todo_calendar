@@ -377,7 +377,7 @@ export default {
             wordItems = wordItems.map((item) => {
                 return `${item.name}: ${item.count} hours`;
             }).join(',\n');
-            this.download(wordItems, 'text/plain');
+            this.download(wordItems, 'application/json');
         }
     }
 };
