@@ -344,7 +344,7 @@ export default {
         },
         download (item, fileName) {
             let link = document.createElement('a');
-            link.download = `${fileName}_${this.datetime}`;
+            link.download = `${fileName}_${this.datetime}.json`;
             link.style.display = 'none';
             // 字元內容轉變成blob地址
             let blob = new Blob([item], {
