@@ -218,18 +218,24 @@ export default {
         Reader
     },
     created() {
-        const date = new Date();
+        let date = new Date();
+        let offset = date.getTimezoneOffset()
         let myStore = window.localStorage;
         date.setMonth(date.getMonth());
         date.setDate(1);
         this.firstDay = date.getDay();
-        if(this.firstDay === 0) this.firstDay = 7;      
+        if(this.firstDay === 0) this.firstDay = 7;  
+
         date.setMonth(date.getMonth()+1);
         date.setDate(0);
         this.numberOfDays = date.getDate();
 
         if(myStore.getItem('tasks')) this.allTasks = JSON.parse(myStore.getItem('tasks'));
         if(myStore.getItem('labels')) this.labels = JSON.parse(myStore.getItem('labels'));
+
+        date = new Date();
+        date = new Date(date.getTime() - (offset*60*1000));
+        this.datetime = date.toISOString().split('T')[0];
     },
     data: function() {
         return {
@@ -334,11 +340,11 @@ export default {
                 tasks: JSON.stringify(this.allTasks),
                 labels: JSON.stringify(this.labels)
             });
-            this.download(downJson);
+            this.download(downJson,'存檔');
         },
-        download (item) {
+        download (item, fileName) {
             let link = document.createElement('a');
-            link.download = `存檔`;
+            link.download = `${fileName}_${this.datetime}`;
             link.style.display = 'none';
             // 字元內容轉變成blob地址
             let blob = new Blob([item], {
@@ -377,7 +383,7 @@ export default {
             wordItems = wordItems.map((item) => {
                 return `${item.name}: ${item.count} hours`;
             }).join(',\n');
-            this.download(wordItems);
+            this.download(wordItems,'分析');
         }
     }
 };
