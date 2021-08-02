@@ -91,9 +91,17 @@
                         <div class="level-item">
                             <b-button
                                 outlined
+                                label="分析"
+                                type="is-primary"
+                                @click="analyzeMonth"
+                            />
+                        </div>
+                        <div class="level-item">
+                            <b-button
+                                outlined
                                 label="下載"
                                 type="is-primary"
-                                @click="downloadJson"
+                                @click="compressJson"
                             />
                         </div>
                         <div class="level-item">
@@ -318,7 +326,7 @@ export default {
             window.localStorage.removeItem('tasks');
             window.localStorage.removeItem('labels');
         },
-        downloadJson() {
+        compressJson() {
             this.allTasks = this.$refs.task.map((taskComponent)=>{
                 return taskComponent.tasks;
             });
@@ -326,12 +334,15 @@ export default {
                 tasks: JSON.stringify(this.allTasks),
                 labels: JSON.stringify(this.labels)
             });
+            this.download(downJson, 'application/json');
+        },
+        download (item, format) {
             let link = document.createElement('a');
             link.download = `存檔`;
             link.style.display = 'none';
             // 字元內容轉變成blob地址
-            let blob = new Blob([downJson], {
-                type: 'application/json;charset=utf-8'
+            let blob = new Blob([item], {
+                type: `${format};charset=utf-8`
             });
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
@@ -348,6 +359,25 @@ export default {
             } catch (error) {
                 console.log(error);
             }
+        },
+        analyzeMonth: function() {
+            let wordItems = this.labels.map((item)=>{
+                return {name: item.name, count: 0};
+            });
+            this.$refs.task.forEach((taskComponent)=>{
+                taskComponent.tasks.forEach((task)=>{
+                    let target = wordItems.find((item)=>{
+                        return item.name === task.label.name
+                    });
+                    if(target) {
+                        target.count++;
+                    }
+                })
+            })
+            wordItems = wordItems.map((item) => {
+                return `${item.name}: ${item.count} hours`;
+            }).join(',\n');
+            this.download(wordItems, 'text/plain');
         }
     }
 };
