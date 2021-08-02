@@ -214,7 +214,8 @@ export default {
         let myStore = window.localStorage;
         date.setMonth(date.getMonth());
         date.setDate(1);
-        this.firstDay = date.getDay();      
+        this.firstDay = date.getDay();
+        if(this.firstDay === 0) this.firstDay = 7;      
         date.setMonth(date.getMonth()+1);
         date.setDate(0);
         this.numberOfDays = date.getDate();
